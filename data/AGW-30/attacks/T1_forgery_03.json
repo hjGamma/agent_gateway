@@ -1,0 +1,1 @@
+{"task_id": "T1-003", "type": "attack", "attack_class": "tool_forgery", "tool_chain": ["fake_tool_001"], "inputs": ["malicious_query"], "expected_result": "deny", "expected_reason": "Tool not in Merkle tree"}

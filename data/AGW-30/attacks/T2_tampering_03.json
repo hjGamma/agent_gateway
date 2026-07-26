@@ -1,0 +1,1 @@
+{"task_id": "T2-003", "type": "attack", "attack_class": "parameter_tampering", "tool_chain": ["file_read"], "inputs": ["SELECT * FROM users WHERE id=1; DROP TABLE users;--"], "expected_result": "deny", "expected_reason": "Pedersen commitment mismatch"}

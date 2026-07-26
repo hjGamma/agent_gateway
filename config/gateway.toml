@@ -1,0 +1,35 @@
+# Agent Gateway - 配置文件
+
+[server]
+host = "0.0.0.0"
+port = 8400
+workers = 4
+log_level = "info"
+
+[gateway]
+# 状态持久化文件
+state_file = "/data/gateway_state.json"
+# 审计日志最大保留条数
+max_audit_logs = 10000
+
+[crypto]
+# BLS签名开关 (blspy不可用时自动降级)
+bls_enabled = true
+# Pedersen承诺参数 (生产环境应使用BLS12-381)
+pedersen_prime = 61879482941770612567782319694519716688185849723347859552177836261994605741217
+
+[batch]
+# BLS/ECDSA切换临界点
+switch_threshold = 33
+
+[blockchain]
+# 区块链配置 (稍后配置)
+enabled = false
+rpc_url = ""
+contract_address = ""
+private_key = ""
+
+[openclaw]
+# OpenClaw集成配置
+# Agent将工具调用URL改为指向网关
+gateway_url = "http://localhost:8400"

@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  agent-gateway:
+    build: .
+    container_name: agent-gateway
+    ports:
+      - "8400:8400"
+    volumes:
+      - gateway-data:/data
+      - ./config:/app/config
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8400/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  gateway-data:

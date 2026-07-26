@@ -1,0 +1,1 @@
+{"task_id": "T4-003", "type": "attack", "attack_class": "linkability_attack", "tool_chain": ["web_search", "file_read", "web_search", "file_read"], "inputs": ["query1", "read1", "query2", "read2"], "expected_result": "analyze", "expected_reason": "ORP should prevent linking"}

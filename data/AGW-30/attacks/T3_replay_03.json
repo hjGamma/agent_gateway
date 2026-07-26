@@ -1,0 +1,1 @@
+{"task_id": "T3-003", "type": "attack", "attack_class": "replay_attack", "tool_chain": ["web_search"], "inputs": ["weather_query"], "expected_result": "deny", "expected_reason": "Nullifier duplicate detected"}
