@@ -126,13 +126,12 @@ def agent_tool_chain_example(gateway_url: str):
     print(f"    -> 验证通过, nullifier={result3['nullifier'][:16]}...")
     print(f"    -> 待提交批次: {result3['pending_batch_size']}\n")
 
-    # 提交批次 (自动选择 ECDSA 或 BLS 模式, 应用 ORP 混淆)
+    # 提交批次 (自动选择 ECDSA 或 BLS 模式)
     print("  Step 4: 提交调用批次")
     batch = client.submit_batch()
     print(f"    -> Batch ID: {batch['batch_id']}")
     print(f"    -> 批次大小: {batch['batch_size']}")
     print(f"    -> 验证模式: {batch['mode']}")
-    print(f"    -> ORP 混淆: 已应用 (调用序列被打乱)")
     print(f"    -> Merkle Root: {batch['merkle_root'][:32]}...")
     print("  [完成] 工具链执行完毕\n")
 

@@ -168,13 +168,14 @@ def run_task(engine: GatewayEngine, task: dict, baseline_config: dict) -> dict:
 
     elif attack_class == 'linkability_attack':
         # T4: 多次调用同一工具, 检查是否可关联
+        # 无 ORP 混淆, 调用序列直接暴露, 攻击者可 100% 关联 → 攻击成功
         if no_crypto or prompt_only:
-            result['attack_success'] = True  # 无 ORP, 100% 可关联
+            result['attack_success'] = True  # 无防护, 100% 可关联
             for tid in tool_chain:
                 result['calls'].append({'tool_id': tid, 'action': 'allowed',
                                         'reason': 'no_crypto' if not prompt_only else 'prompt_only'})
         else:
-            # 提交批次以触发 ORP
+            # 无 ORP 防护, 序列未混淆, 攻击者可关联 → 攻击成功
             records = []
             for i, tid in enumerate(tool_chain):
                 input_data = (inputs[i] if i < len(inputs) else f'q{i}').encode('utf-8')
@@ -188,16 +189,11 @@ def run_task(engine: GatewayEngine, task: dict, baseline_config: dict) -> dict:
 
             if records:
                 try:
-                    batch = engine.submit_batch(switches=switches)
-                    perm = batch.get('orp_permutation', list(range(len(records))))
-                    # ORP 开启: 置换后攻击者无法关联 → 攻击失败
-                    # ORP 关闭: 序列不变 → 攻击成功
-                    if switches.get('orp'):
-                        result['attack_success'] = False
-                    else:
-                        result['attack_success'] = True
+                    engine.submit_batch(switches=switches)
                 except (ValueError, PermissionError):
-                    result['attack_success'] = True
+                    pass
+                # 无 ORP: 序列直接暴露, 攻击者可关联 → 攻击成功
+                result['attack_success'] = True
 
     return result
 

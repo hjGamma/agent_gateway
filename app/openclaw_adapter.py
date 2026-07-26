@@ -59,7 +59,7 @@ class OpenClawGatewayClient:
     # --- 批次提交 ---
 
     def submit_batch(self) -> dict:
-        """提交当前调用批次, 自动选择ECDSA/BLS模式并应用ORP"""
+        """提交当前调用批次, 自动选择ECDSA/BLS模式"""
         resp = self.session.post(f"{self.gateway_url}/v1/batch/submit")
         resp.raise_for_status()
         return resp.json()
@@ -109,5 +109,4 @@ class OpenClawGatewayClient:
         print(f"\n  [Batch] ID={batch['batch_id']}")
         print(f"          Size={batch['batch_size']}, Mode={batch['mode']}")
         print(f"          Merkle Root={batch['merkle_root'][:16]}...")
-        print(f"          ORP applied: sequence shuffled")
         return batch

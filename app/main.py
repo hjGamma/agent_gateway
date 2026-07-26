@@ -207,7 +207,7 @@ async def call_tool(req: ToolCallRequest, background_tasks: BackgroundTasks):
 
 @app.post("/v1/batch/submit")
 async def submit_batch():
-    """提交当前调用批次, 自动选择验证模式并应用ORP"""
+    """提交当前调用批次, 自动选择验证模式"""
     try:
         batch = engine.submit_batch()
         engine.save_state()

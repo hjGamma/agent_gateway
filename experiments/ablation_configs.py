@@ -8,13 +8,13 @@
 # ============================================================
 BASELINE_CONFIGS = {
     'A': {'merkle': False, 'pedersen': False, 'nullifier': False,
-          'bls': False, 'orp': False},
+          'bls': False},
     'B': {'merkle': False, 'pedersen': False, 'nullifier': False,
-          'bls': False, 'orp': False, 'prompt_only': True},
+          'bls': False, 'prompt_only': True},
     'C': {'merkle': True,  'pedersen': False, 'nullifier': True,
-          'bls': False, 'orp': False},
+          'bls': False},
     'D': {'merkle': True,  'pedersen': True,  'nullifier': True,
-          'bls': True,  'orp': True},
+          'bls': True},
 }
 
 # ============================================================
@@ -23,17 +23,15 @@ BASELINE_CONFIGS = {
 # ============================================================
 ABLATION_CONFIGS = {
     'D-full':    {'merkle': True,  'pedersen': True,  'nullifier': True,
-                  'bls': True,  'orp': True},
+                  'bls': True},
     'D-no-merk': {'merkle': False, 'pedersen': True,  'nullifier': True,
-                  'bls': True,  'orp': True},
+                  'bls': True},
     'D-no-ped':  {'merkle': True,  'pedersen': False, 'nullifier': True,
-                  'bls': True,  'orp': True},
+                  'bls': True},
     'D-no-null': {'merkle': True,  'pedersen': True,  'nullifier': False,
-                  'bls': True,  'orp': True},
+                  'bls': True},
     'D-no-bls':  {'merkle': True,  'pedersen': True,  'nullifier': True,
-                  'bls': False, 'orp': True},
-    'D-no-orp':  {'merkle': True,  'pedersen': True,  'nullifier': True,
-                  'bls': True,  'orp': False},
+                  'bls': False},
 }
 
 # 标准测试工具

@@ -10,7 +10,7 @@
       * forgery     : 调用未注册工具            -> 期望网关拒绝 (HTTP 4xx)
       * tampering   : 正常调用但用 Pedersen 承诺绑定输入 -> 承诺非平凡即视为已绑定
       * replay      : 重复调用同一 (tool, input) -> 期望 nullifier 冲突拒绝
-      * linkability : 多次调用同一工具          -> 期望进入批次并由 ORP 混淆
+      * linkability : 多次调用同一工具          -> 期望进入批次
   - 50 次良性调用: 正常工具调用, 期望全部通过 (HTTP 200)
   - 统计: 攻击拦截率, 良性通过率, 平均延迟
   - 保存到 results/e2e_results.json
@@ -159,7 +159,7 @@ def run_attack_scenario(attack_type, runs=ATTACK_RUNS):
             detail = f"orig={s1}, replay={s2}"
 
         elif attack_type == "linkability":
-            # 多次调用同一工具, 期望进入批次并由 ORP 混淆 (调用被接受并批处理)
+            # 多次调用同一工具, 期望进入批次 (调用被接受并批处理)
             inputs = [f"link_q_{i}_{j}" for j in range(4)]
             statuses = []
             lat_total = 0.0
@@ -173,7 +173,7 @@ def run_attack_scenario(attack_type, runs=ATTACK_RUNS):
             status = 200 if all(s == 200 for s in statuses) else statuses[-1]
             body = {"pending_batch_size": pending}
             lat = lat_total
-            # 拦截/缓解: 调用被接受进入批次 (ORP 将在 submit 时混淆序列, 阻断链接)
+            # 缓解: 调用被接受进入批次
             intercepted = all(s == 200 for s in statuses) and pending > 0
             detail = f"4 calls, pending={pending}"
 

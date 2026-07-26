@@ -115,7 +115,6 @@ python3 experiments/run_e2e_openclaw.py
 | D-full | 无 | 0% |
 | D-no-ped | Pedersen | +40% (T2通过) |
 | D-no-null | Nullifier | +20% (T3通过) |
-| D-no-orp | ORP | +20%, LinkRate→100% |
 | D-no-bls | BLS | 0% (仅影响效率) |
 
 ### 实验3: 网关开销微基准 (对标 MCP-PEP §4.5)
@@ -160,7 +159,6 @@ engine.verify_and_record(
         'pedersen': True,  # Pedersen承诺
         'nullifier': True, # Nullifier防重放
         'bls': True,       # BLS签名聚合
-        'orp': True,       # ORP序列混淆(仅影响submit_batch)
     }
 )
 ```

@@ -7,7 +7,7 @@ from typing import List, Dict, Optional, Tuple, Any
 from dataclasses import dataclass, field, asdict
 
 from .crypto import (
-    MerkleTree, PedersenCommitment, BLSSigner, ORP,
+    MerkleTree, PedersenCommitment, BLSSigner,
     compute_nullifier, ToolRegistration, CallRecord,
     VerifyMode, SWITCH_THRESHOLD
 )
@@ -111,7 +111,7 @@ class GatewayEngine:
     # 默认全部开启的消融开关
     DEFAULT_SWITCHES = {
         'merkle': True, 'pedersen': True,
-        'nullifier': True, 'bls': True, 'orp': True,
+        'nullifier': True, 'bls': True,
     }
 
     def verify_and_record(self, tool_id: str, input_data: bytes,
@@ -130,7 +130,6 @@ class GatewayEngine:
             'pedersen': bool - Pedersen承诺
             'nullifier': bool - Nullifier防重放
             'bls': bool - BLS签名聚合
-            'orp': bool - ORP序列混淆 (仅影响submit_batch)
         """
         sw = {**self.DEFAULT_SWITCHES, **(switches or {})}
 
@@ -212,7 +211,7 @@ class GatewayEngine:
     # ============================================================
 
     def submit_batch(self, switches: dict = None) -> dict:
-        """提交当前调用批次, 自动选择验证模式 (支持ORP消融)"""
+        """提交当前调用批次, 自动选择验证模式"""
         sw = {**self.DEFAULT_SWITCHES, **(switches or {})}
         with self._lock:
             n = len(self._records)
@@ -221,26 +220,15 @@ class GatewayEngine:
 
             mode = VerifyMode.BLS_AGG if n >= SWITCH_THRESHOLD else VerifyMode.ECDSA
 
-            # ORP混淆调用序列 (可关闭)
-            if sw['orp']:
-                perm = ORP.random_permutation(n)
-                shuffled_records = ORP.apply(self._records, perm)
-                shuffled_tool_ids = [self._tool_ids[perm[i]] for i in range(n)]
-            else:
-                perm = list(range(n))
-                shuffled_records = self._records[:]
-                shuffled_tool_ids = self._tool_ids[:]
-
             batch = {
                 'batch_id': secrets.token_hex(8),
-                'records': [self._record_to_dict(r) for r in shuffled_records],
-                'tool_ids': shuffled_tool_ids,
+                'records': [self._record_to_dict(r) for r in self._records],
+                'tool_ids': self._tool_ids[:],
                 'agg_sig': 'available' if self._agg_sig is not None else 'none',
                 'merkle_root': self.tree.root.hex(),
                 'mode': mode.value,
                 'batch_size': n,
                 'timestamp': time.time(),
-                'orp_permutation': perm,
             }
 
             # 审计日志

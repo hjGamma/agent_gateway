@@ -1,6 +1,6 @@
 """
 Agent Gateway - 密码学核心模块
-从V3协议移植, 提供Merkle树、Pedersen承诺、BLS签名、ORP、Nullifier
+从V3协议移植, 提供Merkle树、Pedersen承诺、BLS签名、Nullifier
 """
 import hashlib, secrets, time, threading
 from typing import List, Tuple, Optional, Dict, Any
@@ -163,23 +163,6 @@ class BLSSigner:
             return AugSchemeMPL.verify(pk, message, sig)
         except ImportError:
             return False
-
-
-# ============================================================
-# ORP
-# ============================================================
-class ORP:
-    @staticmethod
-    def random_permutation(n: int) -> List[int]:
-        pi = list(range(n))
-        for i in range(n - 1, 0, -1):
-            j = secrets.randbelow(i + 1)
-            pi[i], pi[j] = pi[j], pi[i]
-        return pi
-
-    @staticmethod
-    def apply(records: list, perm: List[int]) -> list:
-        return [records[perm[i]] for i in range(len(perm))]
 
 
 # ============================================================

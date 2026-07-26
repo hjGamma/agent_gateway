@@ -10,7 +10,6 @@ Agent Gateway 是一个部署在智能体（Agent）与工具之间的验证网�
 | **输入参数隐私** | 使用 Pedersen Commitment 隐藏工具调用的输入参数 |
 | **防重放攻击** | 每次调用生成唯一 Nullifier，重复提交被拒绝 |
 | **批量签名聚合** | BLS 增量聚合签名，n≥33 时自动切换至聚合验证模式 |
-| **调用序列混淆** | ORP（Oblivious Random Permutation）打乱调用顺序，防止链路分析 |
 | **状态持久化** | 网关重启后自动恢复工具注册表和审计日志 |
 
 ## 架构
@@ -101,7 +100,6 @@ batch = client.submit_batch()
 print(batch["batch_size"])   # 调用次数
 print(batch["mode"])          # "ecdsa" (n<33) 或 "bls_aggregate" (n≥33)
 print(batch["merkle_root"])  # Merkle 根
-# ORP 自动应用: 调用序列被打乱
 ```
 
 ## 部署方法
@@ -370,17 +368,13 @@ private_key = ""
 
 Agent 每调用一个工具，网关增量聚合其 BLS 签名。当批次大小 n≥33 时自动切换至 BLS 聚合验证模式，验证效率 O(1) 而非 O(n)。
 
-### 5. ORP 序列混淆
-
-批次提交时，调用记录通过随机置换（ORP）打乱顺序，防止攻击者通过调用序列推断 Agent 决策逻辑。
-
 ## 项目结构
 
 ```
 agent_gateway/
 ├── app/
 │   ├── __init__.py
-│   ├── crypto.py            # 密码学核心 (Merkle, Pedersen, BLS, ORP, Nullifier)
+│   ├── crypto.py            # 密码学核心 (Merkle, Pedersen, BLS, Nullifier)
 │   ├── gateway.py           # 网关引擎 (注册, 验证, 批次, 持久化)
 │   ├── main.py              # FastAPI 服务入口 (REST API)
 │   └── openclaw_adapter.py  # OpenClaw 客户端适配器
